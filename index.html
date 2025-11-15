@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="ta">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>12-ஆம் வகுப்பு கணினி அறிவியல் MCQ தேர்வு</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Tamil:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            /* font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; -- இந்த வரி அகற்றப்பட்டது */
+        }
+        body {
+            background-color: #000;
+            color: #fff;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            /* 🟢 திருத்தப்பட்ட வரி: Noto Sans Tamil-ஐ முதன்மை எழுத்துருவாகச் சேர்த்தல் */
+            font-family: 'Noto Sans Tamil', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            border-bottom: 2px solid #4a90e2;
+        }
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: #4a90e2;
+        }
+        .subtitle {
+            color: #aaa;
+            font-size: 1.2rem;
+        }
+        .form-container, .quiz-container, .result-container, #chapter-selection-container {
+            background-color: #111;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            margin-bottom: 30px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #4a90e2;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #444;
+            background-color: #222;
+            color: #fff;
+            font-size: 1rem;
+        }
+        select:focus, input:focus {
+            outline: none;
+            border-color: #4a90e2;
+        }
+        .btn {
+            background: linear-gradient(to right, #4a90e2, #5e60ce);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 8px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-block;
+            margin-top: 10px;
+        }
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(94, 96, 206, 0.4);
+        }
+        .btn:active {
+            transform: translateY(0);
+        }
+        .btn-submit {
+            background: linear-gradient(to right, #27ae60, #2ecc71);
+        }
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #333;
+        }
+        .question-counter {
+            background: #222;
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+        .question-text {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            margin-bottom: 25px;
+            padding: 15px;
+            background: #1a1a1a;
+            border-radius: 10px;
+        }
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .option {
+            padding: 15px;
+            background: #222;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+        }
+        .option:hover {
+            background: #2a2a2a;
+        }
+        .option input {
+            margin-right: 15px;
+            width: auto;
+            height: 20px;
+            cursor: pointer;
+        }
+        .option label {
+            cursor: pointer;
+            font-size: 1.1rem;
+            color: #ddd;
+            font-weight: normal;
+        }
+        .feedback {
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 600;
+            min-height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .correct-feedback {
+            background-color: #27ae60;
+            color: white;
+        }
+        .incorrect-feedback {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .result-container {
+            text-align: center;
+        }
+        .result-title {
+            font-size: 2rem;
+            margin-bottom: 20px;
+            color: #4a90e2;
+        }
+        .result-details {
+            font-size: 1.3rem;
+            line-height: 2;
+            margin-bottom: 30px;
+        }
+        .result-details span {
+            color: #4a90e2;
+            font-weight: 600;
+        }
+        .hidden {
+            display: none;
+        }
+        #chapters-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        #chapters-list label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        #chapters-list input[type="checkbox"] {
+            margin-right: 10px;
+            width: auto;
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 0 15px;
+            }
+            h1 {
+                font-size: 2rem;
+            }
+            .question-text {
+                font-size: 1.2rem;
+            }
+            .option label {
+                font-size: 1rem;
+            }
+            .btn {
+                width: 100%;
+                padding: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>12-ஆம் வகுப்பு கணினி அறிவியல் MCQ தேர்வு</h1>
+            <p class="subtitle">இயல் 1 முதல் 5 வரை – தமிழ் வழி</p>
+        </header>
+
+        <div id="form-container" class="form-container">
+            <h2>மாணவர் விவரங்கள்</h2>
+            <div class="form-group">
+                <label for="student-name">முழுப் பெயர்</label>
+                <input type="text" id="student-name" placeholder="உங்கள் பெயரை உள்ளிடவும்" required>
+            </div>
+            <div class="form-group">
+                <label for="school-name">பள்ளி பெயர்</label>
+                <input type="text" id="school-name" placeholder="பள்ளி பெயரை உள்ளிடவும்" required>
+            </div>
+            <div class="form-group">
+                <label for="class-section">வகுப்பு பிரிவு</label>
+                <select id="class-section" required>
+                    <option value="">தேர்ந்தெடுக்கவும்</option>
+                    <option value="A">A</option>
+                    <option value="B">B</option>
+                    <option value="C">C</option>
+                    <option value="D">D</option>
+                    <option value="E">E</option>
+                </select>
+            </div>
+            <button id="start-quiz" class="btn">தேர்வைத் தொடங்கு</button>
+        </div>
+
+        <div id="chapter-selection-container" class="form-container hidden">
+            <h2>அத்தியாயங்களைத் தேர்ந்தெடுக்கவும்</h2>
+            <p>ஒன்று அல்லது அதிகமான அத்தியாயங்களைத் தேர்ந்தெடுக்கவும்:</p>
+            <div id="chapters-list"></div>
+            <button id="show-quiz-btn" class="btn">தேர்வைக் காட்டு</button>
+        </div>
+
+        <div id="quiz-container" class="quiz-container hidden">
+            <div class="quiz-header">
+                <div class="question-counter">கேள்வி <span id="current-question">1</span> / <span id="total-questions">10</span></div>
+            </div>
+            <div id="question-text" class="question-text"></div>
+            <div id="options-container" class="options-container"></div>
+            <div id="feedback" class="feedback hidden"></div>
+            <button id="next-btn" class="btn">அடுத்த கேள்வி</button>
+        </div>
+
+        <div id="result-container" class="result-container hidden">
+            <h2 class="result-title">தேர்வு முடிவுகள்</h2>
+            <div class="result-details">
+                <p>பெயர்: <span id="result-name"></span></p>
+                <p>பள்ளி: <span id="result-school"></span></p>
+                <p>வகுப்பு: <span id="result-class"></span></p>
+                <p>அத்தியாயம்(கள்): <span id="result-chapter"></span></p>
+                <p>மதிப்பெண்: <span id="result-score"></span></p>
+                <p>சரியான விடைகள்: <span id="result-correct"></span></p>
+                <p>தவறான விடைகள்: <span id="result-wrong"></span></p>
+                <p>விட்டுச்சென்ற கேள்விகள்: <span id="result-skipped"></span></p>
+            </div>
+            <button id="restart-btn" class="btn">மீண்டும் தொடங்கு</button>
+            <button id="whatsapp-share-btn" class="btn" style="background: linear-gradient(to right, #25D366, #128C7E); margin-top: 15px;">WhatsApp மூலம் பகிர்</button>
+        </div>
+    </div>
+
+    <script>
+        // ✅ EXACT MCQs from your DOCX (Chapters 1–5, Tamil with (அ), (ஆ), etc.)
+        const mcqData = {
+            "1": [
+                { question: "ஒரு குறிப்பிட்ட செயலைச் செய்வதற்காக பயன்படுத்தப்படும் குறிமுறையின் சிறிய பகுதியே", options: ["(அ) துணை நிரல்கள்", "(ஆ) செயற்கூறு", "(இ) Pseudo", "(ஈ) தொகுதிகள்"], answer: 0 },
+                { question: "பின்வரும் எந்த அலகு ஒரு பெரிய நிரல் கட்டமைப்பில் வரையறுக்கப்பட்டுள்ளது?", options: ["(அ) துணை நிரல்கள்", "(ஆ) செயற்கூறு", "(இ) கோப்புகள்", "(ஈ) தொகுதிகள்"], answer: 1 },
+                { question: "பின்வரும் எது தனித்தன்மையான தொடரியல் தொகுதிகளைக் கொண்டதாகும்?", options: ["(அ) துணை நிரல்கள்", "(ஆ) செயற்கூறு", "(இ) வரையறை", "(ஈ) தொகுதிகள்"], answer: 2 },
+                { question: "செயற்கூறு வரையறையில் உள்ள மாறிகள் எவ்வாறு அழைக்கப்படுகிறது?", options: ["(அ) துணை நிரல்கள்", "(ஆ) செயற்கூறு", "(இ) அளபுருக்கள்", "(ஈ) செயலுருபு"], answer: 2 },
+                { question: "செயற்கூறு வரையறைக்கு அனுப்பப்படும் மதிப்புகள் எவ்வாறு அழைக்கப்படுகிறது?", options: ["(அ) செயலுருபுகள்", "(ஆ) துணை நிரல்கள்", "(இ) செயற்கூறு", "(ஈ) செயற்கூறு"], answer: 0 },
+                { question: "தரவு வகை குறிப்பு எழுதும்போது, எது கட்டாயமாகிறது?", options: ["(அ) {}", "(ஆ) ()", "(இ) []", "(ஈ) <>"], answer: 1 },
+                { question: "பின்வரும் எது ஒரு பொருள் செய்ய வேண்டியதை தீர்மானிக்கிறது?", options: ["(அ) இயக்க அமைப்பு", "(ஆ) நிரல் பெயர்ப்பி", "(இ) இடைமுகம்", "(ஈ) தொகுப்பான்"], answer: 2 },
+                { question: "பின்வரும் எது இடைமுகத்தில் வரையறுக்கப்பட்ட கட்டளைகளை நிறைவேற்றுகிறது?", options: ["(அ) இயக்க அமைப்பு", "(ஆ) நிரல் பெயர்ப்பி", "(இ) செயல்படுத்துதல்", "(ஈ) தொகுப்பான்"], answer: 2 },
+                { question: "ஒரே மாதிரியான அதே அளபுருக்களை செயற்கூறுவிற்கு அனுப்பினால் ஒரே மாதிரியான விடையைத் தரும் செயற்கூறு எவ்வாறு அழைக்கப்படும்?", options: ["(அ) Impure செயற்கூறு", "(ஆ) Partial செயற்கூறு", "(இ) Dynamic செயற்கூறு", "(ஈ) Pure செயற்கூறு"], answer: 3 },
+                { question: "அளபுருக்களை அனுப்பும் போது பக்க விளைவுகளை ஏற்படுத்தும் செயற்கூறு எவ்வாறு அழைக்கப்படும்?", options: ["(அ) Impure செயற்கூறு", "(ஆ) Partial செயற்கூறு", "(இ) Dynamic செயற்கூறு", "(ஈ) Pure செயற்கூறு"], answer: 0 }
+            ],
+            "2": [
+                { question: "பின்வரும் எந்த செயற்கூறு அருவமாக்கம் தரவு வகையை உருவமைக்கப் பயன்படுகிறது?", options: ["(அ) Constructors", "(ஆ) Destructors", "(இ) recursive", "(ஈ) Nested"], answer: 0 },
+                { question: "பின்வரும் எந்த செயற்கூறு தரவு வகையில் இருந்து தகவல்களை மீட்டெடுக்கும்?", options: ["(அ) Constructors", "(ஆ) Selectors", "(இ) recursive", "(ஈ) Nested"], answer: 1 },
+                { question: "வரிசைப்படுத்தப்பட்ட உருப்புகளை மாற்றக்கூடிய தரவு கட்டமைப்பு", options: ["(அ) Built in", "(ஆ) List", "(இ) Tuple", "(ஈ) Derived data"], answer: 1 },
+                { question: "மாற்ற செய்ய முடியாத பொருளின் தொடர் வரிசை", options: ["(அ) Built in", "(ஆ) List", "(இ) Tuple", "(ஈ) Derived data"], answer: 2 },
+                { question: "உருவமைப்பு அறியப்பட்ட தரவு வகை எவ்வாறு அழைக்கப்படுகிறது.", options: ["(அ) Built in datatype", "(ஆ) Derived datatype", "(இ) Concrete datatype", "(ஈ) Abstract datatype"], answer: 2 },
+                { question: "உருவமைப்பு அறியப்படாத தரவு வகை எவ்வாறு அழைக்கப்படுகிறது", options: ["(அ) Built in datatype", "(ஆ) Derived datatype", "(இ) Concrete datatype", "(ஈ) Abstract datatype"], answer: 3 },
+                { question: "பின்வருவனவற்றில் எது கலவை அமைப்பு?", options: ["(அ) Pair", "(ஆ) Triplet", "(இ) single", "(ஈ) quadrat"], answer: 0 },
+                { question: "இரு மதிப்புகளை ஒன்றாக பிணைப்பு எந்த வகை கருதப்படுகிறது.", options: ["(அ) single", "(ஆ) Triplet", "(இ) Pair", "(ஈ) quadrat"], answer: 2 },
+                { question: "பின்வருவனவற்றில் எது பல் உருப்பு பொருளின் பல்வேறு பகுதிகளை பெயரிட அனுமதிக்கிறது?", options: ["(அ) Classes", "(ஆ) Lists", "(இ) Tuples", "(ஈ) quadrats"], answer: 0 },
+                { question: "பின்வருவனவற்றில் எது கோவைகளை சதுர அடைப்புக்குறிக்குள் வைத்து உருவமைகிறது", options: ["(அ) Tuples", "(ஆ) Lists", "(இ) Classes", "(ஈ) quadrat"], answer: 1 }
+            ],
+            "3": [
+                { question: "பின்வருவனவற்றுள் எது நிரலின் ஒரு பகுதியின் அணுகியல்பை மற்றொரு பகுதிக்கு குறிப்பதாகும்?", options: ["(அ) வரையெல்லை", "(ஆ) நினைவகம்", "(இ) முகவரி", "(ஈ) அணுகுமுறை"], answer: 0 },
+                { question: "மாறியின் பெயரை ஒரு பொருளுடன் பிணைக்கும் செயல்முறையை என்னவென்று அழைக்கப்படும்?", options: ["(அ) வரையெல்லை", "(ஆ) மேப்பிங்", "(இ) பின் பிணைத்தல்", "(ஈ) முன் பிணைத்தல்"], answer: 1 },
+                { question: "பின்வருவனவற்றுள் எது நிரலாக்க மொழியில் மாறியையும் பொருளையும் மேப் செய்யப் பயன்படுகிறது?", options: ["(அ) ::", "(ஆ) :=", "(இ) =", "(ஈ) =="], answer: 2 },
+                { question: "எது மாறியின் பெயரை பொருளுடன் மேப்பிங் செய்வதற்கான இடம் ஆகும்.", options: ["(அ) வரையெல்லை", "(ஆ) மேப்பிங்", "(இ) பிணைத்தல்", "(ஈ) Namespaces"], answer: 3 },
+                { question: "எந்த வரையெல்லை நடப்பு செயற்கூறில் வரையறுக்கப்படும் மாறிகளைக் குறிக்கும்?", options: ["(அ) உள்ளமை வரையெல்லை", "(ஆ) முழுதளாவிய வரையெல்லை", "(இ) தொகுதி வரையெல்லை", "(ஈ) செயற்கூறு வரையெல்லை"], answer: 0 },
+                { question: "ஒரு கணிப்பொறி நிரலை பல துணை நிரல்களாக பிரிக்கும் செயல்முறையே என்னவென்று அழைக்கப்படும்.", options: ["(அ) செயல்முறை நிரலாக்கம்", "(ஆ) தொகுதி நிரலாக்கம்", "(இ) நிகழ்வு இயக்க நிரலாக்கம்", "(ஈ) பொருள் நோக்கு நிரலாக்கம்"], answer: 1 },
+                { question: "எது கணினி சூழலில் உள்ள வளங்களை யார் பார்வையிட மற்றும் பயன்படுத்த முடியும் என்பதை வரைமுறைப்படுத்தும் ஒரு பாதுகாப்பு தொழில்நுட்பமாகும்.", options: ["(அ) கடவுச் சொல்", "(ஆ) அங்கீகாரம்", "(இ) அணுகல் கட்டுப்பாடு", "(ஈ) சான்றிதழ்"], answer: 2 },
+                { question: "எந்த இனக்குழுவின் உறுப்புகளை இனக்குழுவின் உள்ளே மட்டும்தான் கையாள முடியும்.", options: ["(அ) public உறுப்புகள்", "(ஆ) protected உறுப்புகள்", "(இ) pecured உறுப்புகள்", "(ஈ) private உறுப்புகள்"], answer: 3 },
+                { question: "எந்த உறுப்புகளை இனக்குழுவிற்கு வெளியே இருந்தும் அணுக முடியும்?", options: ["(அ) public உறுப்புகள்", "(ஆ) protected உறுப்புகள்", "(இ) pecured உறுப்புகள்", "(ஈ) private உறுப்புகள்"], answer: 0 },
+                { question: "எது வரையறுக்கப்பட்ட இனக்குழு மற்றும் அதன் துணை இனக்குழுக்களால் அணுகப்படும் உறுப்புகள் ஆகும்.", options: ["(அ) public உறுப்புகள்", "(ஆ) protected உறுப்புகள்", "(இ) pecured உறுப்புகள்", "(ஈ) private உறுப்புகள்"], answer: 1 }
+            ],
+            "4": [
+                { question: "எந்த சொல் பெர்ஷிய கணிதமேதை அபு ஜாஃபர் முகமது இபின்-ஐமுசா அல் கௌவாரிஸ்மி பெயரில் இருந்து வந்தது?", options: ["(அ) Flowchart", "(ஆ) Flow", "(இ) Algorithm", "(ஈ) Syntax"], answer: 2 },
+                { question: "பின்வரும் வரிசையாக்க நெறிமுறையில், எந்த நெறிமுறைக்கு குறைந்த எண்ணிக்கையிலான இடமாற்றம் தேவைப்படும்?", options: ["(அ) குமிழி", "(ஆ) விரைவு", "(இ) தேர்ந்தெடுப்பு", "(ஈ) அனைத்தும்"], answer: 2 },
+                { question: "நெறிமுறையின் செயல்திறனை அளவிட இரண்டு முக்கிய அளவீடுகள் எவை?", options: ["(அ) செயலி மற்றும் நினைவகம்", "(ஆ) சிக்கல் மற்றும் கொள்ளளவு", "(இ) நேரம் மற்றும் இடம்", "(ஈ) தரவு மற்றும் இடம்"], answer: 2 },
+                { question: "செல்லுபடியாகும் உள்ளீட்டுக்கு எதிர்பார்க்கபடும் வெளியீட்டை தரும் நெறிமுறை இவ்வாறு அழைக்கபடுகிறது.", options: ["(அ) நெறிமுறைசார் தீர்வு", "(ஆ) நெறிமுறைசார் வெளியீடு", "(இ) நெறிமுறைசார் சிக்கல்", "(ஈ) நெறிமுறைசார் குறிமுறை"], answer: 0 },
+                { question: "ஒரு நெறிமுறையில் மிகமோசமான நிலையை குறிக்க பின்வரும் எது பயன்படுகிறது?", options: ["(அ) Big A", "(ஆ) Big S", "(இ) Big W", "(ஈ) Big O"], answer: 3 },
+                { question: "Big $\\Omega$ இதன் எதிர் பதமானது:", options: ["(அ) Big O", "(ஆ) Big $\\Theta$", "(இ) Big A", "(ஈ) Big S"], answer: 0 },
+                { question: "இருமத் தேடல் இவ்வாறும் அழைக்கபடும்.", options: ["(அ) வரிசைமுறைத் தேடல்", "(ஆ) தொடர் தேடல்", "(இ) தொடரற்ற தேடல்", "(ஈ) இடைவெளித் தேடல்"], answer: 3 },
+                { question: "$\\Omega$ என்ற குறியீடு asymptotic மதிப்பீட்டில் எதைக் குறிக்கிறது?", options: ["(அ) அடிப்பைடை நிலை", "(ஆ) மிதமான நிலை", "(இ) மோசமான நிலை", "(ஈ) NULL நிலை"], answer: 0 },
+                { question: "ஒரு சிக்கல் துணைச் சிக்கல்களாக பிரித்து அதனை பல முறை பயன்படுத்தினால், அந்த சிக்கல் எந்த பண்பை பெறும்?", options: ["(அ) ஒன்றோடு ஒன்றிணைந்த துணைச்சிக்கல்", "(ஆ) உகந்த துணை கட்டமைப்பு", "(இ) நினைவிருத்தல்", "(ஈ) பொறாமை"], answer: 0 },
+                { question: "இயங்கு நிரலாக்கத்தில், ஏற்கனவே கணக்கீடு செய்த மதிப்புகளை சேமிக்கு யுக்தியை இவ்வாறு அழைக்கலாம்.", options: ["(அ) மதிப்பை சேமிக்கும் பண்பு", "(ஆ) மதிப்பை சேகரிக்கும் பண்பு", "(இ) நினைவிருத்தல்", "(ஈ) படமிடல்"], answer: 2 }
+            ],
+            "5": [
+                { question: "பைத்தானை உருவாக்கியவர் யார்?", options: ["(அ) ரிட்ஸீ", "(ஆ) கைடோ வான் ரோஷம்", "(இ) பில் கேட்ஸ்", "(ஈ) சுந்தர் பிச்சை"], answer: 1 },
+                { question: "இவற்றுள் எந்த தூண்டு குறி நிரல் பெயர்ப்பி கட்டளைகளை ஏற்று கொள்ள தயார் நிலையில் இருப்பதை குறிக்கிறது?", options: ["(அ) >>>", "(ஆ) #", "(இ) $", "(ஈ) <<"], answer: 0 },
+                { question: "பின்வரும் எந்த சாவி சேர்மானம் ஓர் புதிய பைத்தான் நிரலை உருவாக்கப்பயன்படுகிறது.", options: ["(அ) Ctrl+C", "(ஆ) Ctrl+B", "(இ) Ctrl+F", "(ஈ) Ctrl+N"], answer: 3 },
+                { question: "பின்வரும் எந்த குறியுரு பைத்தான் நிரலில் குறிப்புகளை உள்ளீடு செய்ய பயன்படுகிறது?", options: ["(அ) #", "(ஆ) &", "(இ) @", "(ஈ) $"], answer: 0 },
+                { question: "எந்த குறி ஒன்றுக்கு மேற்பட்ட உறுப்புகளை ஒற்றை வரியில் அச்சிடும்", options: ["(அ) அரைப்புள்ளி", "(ஆ) டாலர்", "(இ) காற்புள்ளி", "(ஈ) முக்காற்புள்ளி"], answer: 2 },
+                { question: "பின்வரும் எது வில்லைகள் கிடையாது?", options: ["(அ) நிரல்பெயர்ப்பி", "(ஆ) குறிப்பெயர்கள்", "(இ) சிறப்புச் சொற்கள்", "(ஈ) செயற்குறிகள்"], answer: 0 },
+                { question: "பின்வருவனவற்றில் எது பைத்தான் சிறப்புச் சொல் கிடையாது?", options: ["(அ) break", "(ஆ) while", "(இ) continue", "(ஈ) operators"], answer: 3 },
+                { question: "எந்த செயற்குறியை ஒப்பீடு செயற்குறி என்று அழைக்கப்படுகிறது?", options: ["(அ) கணக்கீடு", "(ஆ) தொடர்புடைய", "(இ) தருக்க", "(ஈ) மதிப்பிருத்தல்"], answer: 1 },
+                { question: "பின்வருவனவற்றில் எது தருக்க செயற்குறி கிடையாது?", options: ["(அ) and", "(ஆ) or", "(இ) not", "(ஈ) like"], answer: 3 },
+                { question: "எந்த செயற்குறி நிபந்தனை செயற்குறி என்று அழைக்கப்படுகிறது?", options: ["(அ) மும்ம செயற்குறி", "(ஆ) தொடர்புடைய", "(இ) தருக்க", "(ஈ) மதிப்பிருத்தல்"], answer: 0 }
+            ]
+        };
+
+        const chapterNames = {
+            "1": "இயல் 1: செயற்கூறு (Function)",
+            "2": "இயல் 2: தரவு அருவமாக்கம் (Data Abstraction)",
+            "3": "இயல் 3: வரையெல்லை (Scoping)",
+            "4": "இயல் 4: நெறிமுறையின் யுக்திகள் (Algorithmic Strategies)",
+            "5": "இயல் 5: பைத்தான் அறிமுகம் - மாறிகள் மற்றும் செயற்குறிகள் (Python Introduction - Variables and Operators)"
+        };
+
+        // DOM elements
+        const formContainer = document.getElementById('form-container');
+        const chapterSelectionContainer = document.getElementById('chapter-selection-container');
+        const quizContainer = document.getElementById('quiz-container');
+        const resultContainer = document.getElementById('result-container');
+        const startBtn = document.getElementById('start-quiz');
+        const showQuizBtn = document.getElementById('show-quiz-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const whatsappShareBtn = document.getElementById('whatsapp-share-btn');
+        const studentNameInput = document.getElementById('student-name');
+        const schoolNameInput = document.getElementById('school-name');
+        const classSectionSelect = document.getElementById('class-section');
+        const chaptersListEl = document.getElementById('chapters-list');
+        const currentQuestionEl = document.getElementById('current-question');
+        const totalQuestionsEl = document.getElementById('total-questions');
+        const questionTextEl = document.getElementById('question-text');
+        const optionsContainerEl = document.getElementById('options-container');
+        const feedbackEl = document.getElementById('feedback');
+        const resultNameEl = document.getElementById('result-name');
+        const resultSchoolEl = document.getElementById('result-school');
+        const resultClassEl = document.getElementById('result-class');
+        const resultChapterEl = document.getElementById('result-chapter');
+        const resultScoreEl = document.getElementById('result-score');
+        const resultCorrectEl = document.getElementById('result-correct');
+        const resultWrongEl = document.getElementById('result-wrong');
+        const resultSkippedEl = document.getElementById('result-skipped');
+
+        // State
+        let questions = [];
+        let currentQuestionIndex = 0;
+        let userAnswers = [];
+        let correctAnswers = 0;
+        let wrongAnswers = 0;
+        let skippedQuestions = 0;
+        let studentInfo = {};
+
+        // Event listeners
+        startBtn.addEventListener('click', startQuiz);
+        showQuizBtn.addEventListener('click', showQuiz);
+        nextBtn.addEventListener('click', nextQuestion);
+        restartBtn.addEventListener('click', restartQuiz);
+        whatsappShareBtn.addEventListener('click', shareViaWhatsApp);
+
+        function startQuiz() {
+            if (!studentNameInput.value.trim() || !schoolNameInput.value.trim() || !classSectionSelect.value) {
+                alert('அனைத்து புலங்களையும் நிரப்பவும்');
+                return;
+            }
+            studentInfo = {
+                name: studentNameInput.value.trim(),
+                school: schoolNameInput.value.trim(),
+                class: classSectionSelect.value
+            };
+            chaptersListEl.innerHTML = '';
+            for (const key in mcqData) {
+                const label = document.createElement('label');
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.value = key;
+                const span = document.createElement('span');
+                span.textContent = chapterNames[key];
+                label.appendChild(checkbox);
+                label.appendChild(span);
+                chaptersListEl.appendChild(label);
+            }
+            formContainer.classList.add('hidden');
+            chapterSelectionContainer.classList.remove('hidden');
+        }
+
+        function showQuiz() {
+            const selected = chaptersListEl.querySelectorAll('input:checked');
+            if (selected.length === 0) {
+                alert('குறைந்தது ஒரு அத்தியாயத்தைத் தேர்ந்தெடுக்கவும்.');
+                return;
+            }
+            questions = [];
+            selected.forEach(cb => questions.push(...mcqData[cb.value]));
+            const selectedChapters = Array.from(selected).map(cb => chapterNames[cb.value]).join(', ');
+            studentInfo.chapter = selectedChapters;
+            currentQuestionIndex = 0;
+            userAnswers = new Array(questions.length).fill(null);
+            correctAnswers = 0;
+            wrongAnswers = 0;
+            skippedQuestions = 0;
+            totalQuestionsEl.textContent = questions.length;
+            showQuestion();
+            chapterSelectionContainer.classList.add('hidden');
+            quizContainer.classList.remove('hidden');
+        }
+
+        function showQuestion() {
+            const q = questions[currentQuestionIndex];
+            currentQuestionEl.textContent = currentQuestionIndex + 1;
+            questionTextEl.innerHTML = q.question;
+            MathJax.typesetPromise([questionTextEl]).catch(console.error);
+            optionsContainerEl.innerHTML = '';
+            q.options.forEach((opt, idx) => {
+                const el = document.createElement('div');
+                el.className = 'option';
+                const radio = document.createElement('input');
+                radio.type = 'radio';
+                radio.name = 'answer';
+                radio.id = `opt-${idx}`;
+                radio.value = idx;
+                const lbl = document.createElement('label');
+                lbl.htmlFor = `opt-${idx}`;
+                lbl.textContent = opt;
+                el.appendChild(radio);
+                el.appendChild(lbl);
+                optionsContainerEl.appendChild(el);
+                radio.addEventListener('change', () => {
+                    userAnswers[currentQuestionIndex] = idx;
+                    checkAnswer();
+                });
+            });
+            if (userAnswers[currentQuestionIndex] !== null) {
+                document.getElementById(`opt-${userAnswers[currentQuestionIndex]}`).checked = true;
+            }
+            feedbackEl.className = 'feedback hidden';
+            nextBtn.textContent = currentQuestionIndex === questions.length - 1 ? 'தேர்வை சமர்ப்பி' : 'அடுத்த கேள்வி';
+            nextBtn.classList.toggle('btn-submit', currentQuestionIndex === questions.length - 1);
+        }
+
+        function checkAnswer() {
+            const sel = userAnswers[currentQuestionIndex];
+            const corr = questions[currentQuestionIndex].answer;
+            document.querySelectorAll('.option').forEach(opt => opt.style.backgroundColor = '#222');
+            const selOpt = document.querySelector(`#opt-${sel}`).closest('.option');
+            const corrOpt = document.querySelector(`#opt-${corr}`).closest('.option');
+            
+            // Check if the answer has already been evaluated for this question
+            const currentAnswer = userAnswers[currentQuestionIndex];
+            const previousResult = questions[currentQuestionIndex].result; // Store the result state on the question object
+            
+            if (previousResult === undefined) { // Only evaluate and count if not done already
+                if (sel === corr) {
+                    questions[currentQuestionIndex].result = 'correct';
+                    correctAnswers++;
+                } else {
+                    questions[currentQuestionIndex].result = 'incorrect';
+                    wrongAnswers++;
+                }
+            }
+            
+            if (sel === corr) {
+                selOpt.style.backgroundColor = '#27ae60';
+                feedbackEl.textContent = 'சரி! நன்று!';
+                feedbackEl.className = 'feedback correct-feedback';
+            } else {
+                if (selOpt) selOpt.style.backgroundColor = '#e74c3c';
+                if (corrOpt) corrOpt.style.backgroundColor = '#27ae60';
+                feedbackEl.textContent = 'தவறு! சரியான விடை பச்சை நிறத்தில் தெரிகிறது.';
+                feedbackEl.className = 'feedback incorrect-feedback';
+            }
+            
+            feedbackEl.classList.remove('hidden');
+            document.querySelectorAll('input[name="answer"]').forEach(r => r.disabled = true);
+        }
+
+        function nextQuestion() {
+            // Recalculate counts based on stored results before moving
+            let totalCorrect = 0;
+            let totalWrong = 0;
+            let totalSkipped = 0;
+            
+            // Mark current question as skipped if no answer was selected before moving
+            if (userAnswers[currentQuestionIndex] === null && questions[currentQuestionIndex].result === undefined) {
+                questions[currentQuestionIndex].result = 'skipped';
+            }
+
+            questions.forEach(q => {
+                if (q.result === 'correct') {
+                    totalCorrect++;
+                } else if (q.result === 'incorrect') {
+                    totalWrong++;
+                } else if (q.result === 'skipped') {
+                    totalSkipped++;
+                }
+            });
+
+            correctAnswers = totalCorrect;
+            wrongAnswers = totalWrong;
+            skippedQuestions = totalSkipped;
+
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                showQuestion();
+            } else {
+                submitQuiz();
+            }
+        }
+
+        function submitQuiz() {
+            // Final calculation for the results screen
+            let totalCorrect = 0;
+            let totalWrong = 0;
+            let totalSkipped = 0;
+            
+            questions.forEach(q => {
+                if (q.result === 'correct') {
+                    totalCorrect++;
+                } else if (q.result === 'incorrect') {
+                    totalWrong++;
+                } else if (q.result === 'skipped') {
+                    totalSkipped++;
+                } else if (q.result === undefined) {
+                    totalSkipped++; // Count unanswered questions at the end as skipped
+                }
+            });
+
+            correctAnswers = totalCorrect;
+            wrongAnswers = totalWrong;
+            skippedQuestions = totalSkipped;
+
+            resultNameEl.textContent = studentInfo.name;
+            resultSchoolEl.textContent = studentInfo.school;
+            resultClassEl.textContent = studentInfo.class;
+            resultChapterEl.textContent = studentInfo.chapter;
+            resultScoreEl.textContent = `${correctAnswers} / ${questions.length}`;
+            resultCorrectEl.textContent = correctAnswers;
+            resultWrongEl.textContent = wrongAnswers;
+            resultSkippedEl.textContent = skippedQuestions;
+            quizContainer.classList.add('hidden');
+            resultContainer.classList.remove('hidden');
+        }
+
+        function restartQuiz() {
+            resultContainer.classList.add('hidden');
+            formContainer.classList.remove('hidden');
+            studentNameInput.value = '';
+            schoolNameInput.value = '';
+            classSectionSelect.value = '';
+            questions.forEach(q => delete q.result); // Clear previous results
+        }
+
+        function shareViaWhatsApp() {
+            const { name, chapter } = studentInfo;
+            const msg = encodeURIComponent(
+                `வணக்கம்! நான் "${chapter}" தலைப்பில் 12-ஆம் வகுப்பு கணினி அறிவியல் MCQ தேர்வில் ${correctAnswers}/${questions.length} மதிப்பெண் பெற்றேன். நீங்களும் முயற்சியுங்கள்!`
+            );
+            window.open(`https://wa.me/?text=${msg}`, '_blank');
+        }
+    </script>
+</body>
+</html>
